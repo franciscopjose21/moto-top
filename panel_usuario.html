@@ -1,0 +1,1668 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOTOS TOP | Catálogo y Repuestos</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --color-bg: #0a0a0a;
+            --color-card: #141414;
+            --color-border: #262626;
+            --color-text: #ffffff;
+            --color-text-muted: #9ca3af;
+            --color-nav-bg: rgba(10, 10, 10, 0.95);
+        }
+
+        [data-theme="light"] {
+            --color-bg: #f3f4f6;
+            --color-card: #ffffff;
+            --color-border: #d1d5db;
+            --color-text: #111827;
+            --color-text-muted: #4b5563;
+            --color-nav-bg: rgba(255, 255, 255, 0.95);
+        }
+
+        body { 
+            background-color: var(--color-bg); 
+            color: var(--color-text); 
+            overflow-x: hidden; 
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--color-bg); }
+        ::-webkit-scrollbar-thumb { background: #ff4500; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #e03e00; }
+
+        /* Product List Item */
+        .product-list-item {
+            display: flex;
+            flex-direction: row;
+            gap: 1.5rem;
+            background: var(--color-card);
+            border: 1px solid var(--color-border);
+            border-radius: 1rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            position: relative;
+        }
+        .product-list-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(255, 69, 0, 0.15);
+            border-color: #ff4500;
+        }
+        .product-list-image {
+            width: 180px;
+            min-width: 180px;
+            height: 180px;
+            background: var(--color-bg);
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .product-list-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+        .product-list-item:hover .product-list-image img {
+            transform: scale(1.05);
+        }
+        .product-list-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .product-list-header {
+            margin-bottom: 0.5rem;
+        }
+        .product-list-category {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+            letter-spacing: 1px;
+        }
+        .product-list-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin: 0.25rem 0;
+            color: var(--color-text);
+        }
+        .product-list-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0.5rem 0;
+        }
+        .stars {
+            color: #ffc107;
+            letter-spacing: 2px;
+        }
+        .product-list-description {
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+            line-height: 1.4;
+            margin: 0.5rem 0;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .product-list-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ff4500;
+        }
+        .hot-deals-badge {
+            display: inline-block;
+            background-color: #dc2626;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: bold;
+            padding: 0.15rem 0.6rem;
+            border-radius: 0.25rem;
+            margin-left: 0.75rem;
+            vertical-align: middle;
+        }
+        .out-of-stock-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.75);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            border-radius: 1rem;
+        }
+        .out-of-stock-overlay span {
+            background: #7f1d1d;
+            color: #f87171;
+            padding: 6px 16px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        /* Filters Sidebar */
+        .filters-sidebar {
+            background: var(--color-card);
+            border: 1px solid var(--color-border);
+            border-radius: 1rem;
+            padding: 1.25rem;
+            position: sticky;
+            top: 120px;
+            height: fit-content;
+        }
+        .filter-section {
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--color-border);
+            padding-bottom: 1rem;
+        }
+        .filter-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        .filter-title {
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--color-text);
+        }
+        .filter-option {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+            cursor: pointer;
+            color: var(--color-text-muted);
+            transition: color 0.2s;
+        }
+        .filter-option:hover {
+            color: var(--color-text);
+        }
+        .filter-option input {
+            accent-color: #ff4500;
+            width: 1rem;
+            height: 1rem;
+            cursor: pointer;
+        }
+        .filter-option label {
+            cursor: pointer;
+            flex: 1;
+        }
+        .price-range {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        .price-range input {
+            width: 100%;
+            background: var(--color-bg);
+            border: 1px solid var(--color-border);
+            border-radius: 0.5rem;
+            padding: 0.5rem;
+            color: var(--color-text);
+            font-size: 0.8rem;
+        }
+        .price-range input:focus {
+            outline: none;
+            border-color: #ff4500;
+        }
+        input[type="range"] {
+            width: 100%;
+            height: 4px;
+            -webkit-appearance: none;
+            background: var(--color-border);
+            border-radius: 2px;
+            outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #ff4500;
+            cursor: pointer;
+        }
+        
+        /* Categorías en línea */
+        .categories-bar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            padding: 0.5rem;
+        }
+        .category-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            background: var(--color-bg);
+            border: 1px solid var(--color-border);
+            color: var(--color-text-muted);
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .category-btn:hover {
+            border-color: #ff4500;
+            color: var(--color-text);
+        }
+        .category-btn.active {
+            background: #ff4500;
+            border-color: #ff4500;
+            color: white;
+        }
+        
+        /* Categorías en página principal */
+        .home-categories {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        .home-category-card {
+            background: var(--color-card);
+            border: 1px solid var(--color-border);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 140px;
+        }
+        .home-category-card:hover {
+            transform: translateY(-5px);
+            border-color: #ff4500;
+            box-shadow: 0 10px 20px rgba(255, 69, 0, 0.2);
+        }
+        .home-category-card i {
+            font-size: 2rem;
+            color: #ff4500;
+            margin-bottom: 0.75rem;
+        }
+        .home-category-card h3 {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        /* Panel de marcas desplegable */
+        .brands-dropdown {
+            background: var(--color-card);
+            border: 1px solid var(--color-border);
+            border-radius: 1rem;
+            padding: 1rem;
+            margin-top: 1rem;
+            display: none;
+        }
+        .brands-dropdown.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        .brands-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-top: 0.75rem;
+        }
+        .brand-chip {
+            background: var(--color-bg);
+            border: 1px solid var(--color-border);
+            border-radius: 2rem;
+            padding: 0.4rem 1rem;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .brand-chip:hover {
+            background: #ff4500;
+            border-color: #ff4500;
+            color: white;
+        }
+        
+        /* Comparador */
+        .comparator-panel {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--color-card);
+            border: 1px solid var(--color-border);
+            border-radius: 1rem;
+            padding: 1rem;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            display: none;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .comparator-panel.active {
+            display: flex;
+        }
+        .comparator-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--color-bg);
+            padding: 0.3rem 0.8rem;
+            border-radius: 2rem;
+            border: 1px solid var(--color-border);
+        }
+        .comparator-item img {
+            width: 30px;
+            height: 30px;
+            object-fit: contain;
+            border-radius: 0.25rem;
+        }
+        .comparator-item span {
+            font-size: 0.8rem;
+        }
+        .comparator-item button {
+            background: none;
+            border: none;
+            color: #f87171;
+            cursor: pointer;
+        }
+        
+        /* Modal Comparador */
+        #comparator-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            background: rgba(0,0,0,0.9);
+            backdrop-filter: blur(8px);
+            align-items: center;
+            justify-content: center;
+            overflow-y: auto;
+        }
+        #comparator-modal.active {
+            display: flex;
+        }
+        .comparator-modal-content {
+            background: var(--color-card);
+            border-radius: 1.5rem;
+            max-width: 1200px;
+            width: 95%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 1.5rem;
+            margin: 1rem;
+        }
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .comparison-table th, .comparison-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--color-border);
+            vertical-align: top;
+        }
+        .comparison-table th {
+            background: var(--color-bg);
+            font-weight: 600;
+            width: 150px;
+        }
+        
+        /* Product Detail */
+        .product-detail-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            background: rgba(0,0,0,0.95);
+            backdrop-filter: blur(10px);
+            align-items: center;
+            justify-content: center;
+            overflow-y: auto;
+        }
+        .product-detail-modal.active {
+            display: flex;
+        }
+        .product-detail-content {
+            background: var(--color-card);
+            border-radius: 1.5rem;
+            max-width: 1000px;
+            width: 95%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 1.5rem;
+            margin: 1rem;
+        }
+        .product-detail-gallery {
+            position: relative;
+        }
+        .detail-swiper {
+            width: 100%;
+            height: 400px;
+            border-radius: 1rem;
+            overflow: hidden;
+        }
+        .detail-swiper .swiper-slide {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--color-bg);
+        }
+        .detail-swiper .swiper-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+        /* Botón comparar en productos */
+        .compare-btn {
+            background: transparent;
+            border: 1px solid var(--color-border);
+            padding: 0.3rem 0.8rem;
+            border-radius: 0.5rem;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .compare-btn:hover {
+            border-color: #ff4500;
+            color: #ff4500;
+        }
+        .compare-btn.active {
+            background: #ff4500;
+            border-color: #ff4500;
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .product-list-item {
+                flex-direction: column;
+                padding: 0.75rem;
+            }
+            .product-list-image {
+                width: 100%;
+                min-width: auto;
+                height: 200px;
+            }
+            .product-list-title {
+                font-size: 1rem;
+            }
+            .product-list-price {
+                font-size: 1.25rem;
+            }
+            .filters-sidebar {
+                position: relative;
+                top: 0;
+                margin-bottom: 1.5rem;
+            }
+            .categories-bar {
+                overflow-x: auto;
+                flex-wrap: nowrap;
+                justify-content: flex-start;
+                padding-bottom: 0.5rem;
+            }
+            .home-category-card {
+                min-width: 100px;
+                padding: 1rem;
+            }
+            .home-category-card i {
+                font-size: 1.5rem;
+            }
+            .comparison-table th, .comparison-table td {
+                padding: 0.5rem;
+                font-size: 0.8rem;
+            }
+            .detail-swiper {
+                height: 250px;
+            }
+        }
+        
+        .swiper-hero { width: 100%; height: 65vh; min-height: 500px; }
+        .swiper-overlay { position: absolute; inset: 0; background: linear-gradient(to right, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.4) 50%, rgba(10,10,10,0.1) 100%); }
+        .swiper-button-next, .swiper-button-prev { color: #ff4500 !important; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+        .swiper-pagination-bullet-active { background-color: #ff4500 !important; }
+        
+        .moto-search-widget {
+            box-shadow: 0 15px 35px -5px rgba(0,0,0,0.6);
+        }
+
+        #chat-widget { transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease; transform-origin: bottom right; }
+        .chat-hidden { transform: scale(0.5); opacity: 0; pointer-events: none; }
+        .chat-bubble-user { background: #ff4500; color: white; border-radius: 15px 15px 0 15px; }
+        .chat-bubble-ai { background: var(--color-card); border: 1px solid var(--color-border); color: var(--color-text); border-radius: 15px 15px 15px 0; }
+
+        .loading-spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #fff;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            display: inline-block;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .fade-in { animation: fadeIn 0.4s ease-in-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .toast-notification { animation: slideIn 0.3s ease-out forwards; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 12px;
+        }
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--color-text-muted);
+            border-radius: 50%;
+            animation: typingBounce 1.4s infinite ease-in-out;
+        }
+        .typing-dot:nth-child(1) { animation-delay: 0s; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typingBounce {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-6px); }
+        }
+    </style>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        motos: {
+                            bg: 'var(--color-bg)',
+                            card: 'var(--color-card)',
+                            border: 'var(--color-border)',
+                            text: 'var(--color-text)',
+                            muted: 'var(--color-text-muted)',
+                            accent: '#ff4500', 
+                            accentHover: '#e03e00',
+                            navBg: 'var(--color-nav-bg)'
+                        }
+                    },
+                    fontFamily: {
+                        oswald: ['Oswald', 'sans-serif'],
+                        roboto: ['Roboto', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-roboto antialiased selection:bg-motos-accent selection:text-white">
+
+    <!-- Navegación -->
+    <nav class="fixed w-full z-50 bg-motos-navBg backdrop-blur-md shadow-lg transition-colors flex flex-col border-b border-motos-border">
+        <div class="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 w-full border-b border-motos-border/40">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-1 flex justify-start">
+                    <button onclick="openSearchModal()" class="text-motos-text hover:text-motos-accent transition-colors text-xl font-light">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                </div>
+                
+                <div class="flex-shrink-0 flex items-center justify-center cursor-pointer" onclick="navigate('home')">
+                    <a class="font-oswald text-3xl md:text-4xl font-bold italic tracking-wider text-motos-text flex items-center gap-1.5">
+                        MOTOS TOP 
+                        <i class="fa-solid fa-shield-halved text-2xl text-motos-text"></i>
+                    </a>
+                </div>
+
+                <div class="flex-1 flex justify-end items-center gap-5 text-sm font-medium">
+                    <div class="hidden lg:flex items-center gap-1.5 text-motos-text cursor-pointer hover:text-motos-accent transition">
+                        <span>Colombia | COP $</span> 
+                        <i class="fa-solid fa-chevron-down text-[10px]"></i>
+                    </div>
+                    
+                    <button onclick="toggleTheme()" class="text-motos-text hover:text-motos-accent transition-colors text-xl">
+                        <i id="theme-icon" class="fa-solid fa-sun"></i>
+                    </button>
+
+                    <button onclick="navigate('favorites')" class="text-motos-text hover:text-motos-accent transition-colors text-xl hidden sm:block relative">
+                        <i class="fa-regular fa-heart"></i>
+                        <span id="favorites-count" class="absolute -top-1 -right-2 bg-motos-accent text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full border border-motos-bg hidden">0</span>
+                    </button>
+
+                    <button onclick="navigate('cart')" class="relative text-motos-text hover:text-motos-accent transition-colors flex items-center">
+                        <i class="fa-solid fa-bag-shopping text-2xl"></i>
+                        <span id="cart-count" class="absolute -top-1 -right-2 bg-motos-accent text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full border border-motos-bg">0</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main id="app-container" class="pt-32 min-h-screen">
+        
+        <!-- HOME -->
+        <div id="view-home" class="view-section">
+            <header class="relative mb-24">
+                <div class="swiper swiper-hero">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide" style="background-image: url('https://images.unsplash.com/photo-1558981420-87aa9dad1c89?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80'); background-size: cover; background-position: center;">
+                            <div class="swiper-overlay"></div>
+                            <div class="relative z-10 w-full max-w-screen-2xl mx-auto px-8 h-full flex flex-col justify-center">
+                                <div class="max-w-2xl">
+                                    <span class="bg-red-600 text-white text-xs font-bold uppercase px-3 py-1 rounded">Promo Exclusiva</span>
+                                    <h1 class="text-5xl md:text-7xl font-oswald font-bold uppercase tracking-tight text-white mt-4 mb-2 leading-tight">
+                                        TU NUEVA EQUIPACIÓN <br><span class="text-motos-accent">HASTA -50%</span>
+                                    </h1>
+                                    <p class="text-lg text-gray-300 mb-8">RACING • URBAN • TOURING. Prepárate para la ruta con las mejores marcas.</p>
+                                    <button onclick="navigate('catalog')" class="bg-motos-accent hover:bg-motos-accentHover text-white font-bold py-3 px-8 rounded-lg uppercase tracking-wider transition-colors">Ver Productos</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-pagination"></div>
+                </div>
+
+                <div class="absolute -bottom-14 left-0 w-full z-30 px-4">
+                    <div class="max-w-5xl mx-auto bg-motos-card border border-motos-border rounded-xl p-4 md:p-6 flex flex-col md:flex-row items-center gap-4 moto-search-widget">
+                        <div class="flex-shrink-0 text-motos-text text-center md:text-left border-b md:border-b-0 md:border-r border-motos-border pb-3 md:pb-0 md:pr-6">
+                            <h3 class="font-oswald font-bold text-xl md:text-2xl uppercase leading-tight">Buscar por<br><span class="text-motos-accent">Modelo de Moto</span></h3>
+                        </div>
+                        <div class="flex-1 grid grid-cols-1 md:grid-cols-3 gap-3 w-full">
+                            <select class="w-full bg-motos-bg border border-motos-border text-motos-text px-4 py-3 rounded-lg focus:outline-none focus:border-motos-accent">
+                                <option>1. Selecciona Marca</option>
+                                <option>Yamaha</option><option>Honda</option><option>Kawasaki</option>
+                                <option>Suzuki</option><option>BMW</option><option>KTM</option>
+                            </select>
+                            <select class="w-full bg-motos-bg border border-motos-border text-motos-text px-4 py-3 rounded-lg">
+                                <option>2. Elige un Modelo</option>
+                            </select>
+                            <select class="w-full bg-motos-bg border border-motos-border text-motos-text px-4 py-3 rounded-lg">
+                                <option>3. Elige un Año</option>
+                            </select>
+                        </div>
+                        <button class="w-full md:w-auto bg-motos-accent hover:bg-motos-accentHover text-white font-bold py-3 px-8 rounded-lg uppercase tracking-wider transition-colors">
+                            <i class="fa-solid fa-magnifying-glass"></i> Buscar
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Categorías en página principal -->
+            <section class="py-8 max-w-7xl mx-auto px-4">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-oswald font-bold uppercase tracking-wide text-motos-text">
+                        <i class="fa-solid fa-grid-2 text-motos-accent mr-3"></i>Explora por <span class="text-motos-accent">Categoría</span>
+                    </h2>
+                    <p class="text-motos-muted mt-2">Selecciona una categoría para ver todas las marcas disponibles</p>
+                </div>
+                <div class="home-categories" id="home-categories"></div>
+                
+                <div id="brands-dropdown" class="brands-dropdown">
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-bold" id="dropdown-title">Marcas disponibles</h3>
+                        <button onclick="closeBrandsDropdown()" class="text-gray-400 hover:text-white">&times;</button>
+                    </div>
+                    <div id="brands-list" class="brands-grid"></div>
+                </div>
+            </section>
+
+            <section class="py-12 max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 bg-motos-card/50 rounded-2xl my-8">
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-oswald font-bold uppercase tracking-wide text-motos-text">
+                        <i class="fa-solid fa-tag text-motos-accent mr-3"></i>Ofertas <span class="text-motos-accent">Flash</span>
+                    </h2>
+                </div>
+                <div id="offers-list" class="space-y-4"></div>
+            </section>
+        </div>
+
+        <!-- VISTA: CATÁLOGO CON FILTROS -->
+        <div id="view-catalog" class="view-section hidden py-8 max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="categories-bar" id="categories-bar">
+                <button class="category-btn active" onclick="selectCategory('all')">Todos</button>
+                <button class="category-btn" onclick="selectCategory('Casco')">Cascos</button>
+                <button class="category-btn" onclick="selectCategory('Intercom')">Intercomunicadores</button>
+                <button class="category-btn" onclick="selectCategory('Caja')">Cajas y Maleteros</button>
+                <button class="category-btn" onclick="selectCategory('Accesorio')">Accesorios</button>
+                <button class="category-btn" onclick="selectCategory('Repuesto')">Repuestos</button>
+                <button class="category-btn" onclick="selectCategory('Defensa')">Defensas / Sliders</button>
+                <button class="category-btn" onclick="selectCategory('Chaleco')">Chalecos / Chaquetas</button>
+                <button class="category-btn" onclick="selectCategory('Guantes')">Guantes</button>
+                <button class="category-btn" onclick="selectCategory('Botas')">Botas</button>
+                <button class="category-btn" onclick="selectCategory('Iluminacion')">Iluminación LED</button>
+                <button class="category-btn" onclick="selectCategory('Herramientas')">Herramientas</button>
+            </div>
+            
+            <div class="flex flex-col lg:flex-row gap-8">
+                <div class="lg:w-80">
+                    <div class="filters-sidebar">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="font-oswald text-xl font-bold uppercase text-motos-text">Filtros</h3>
+                            <button onclick="clearFilters()" class="text-xs text-motos-accent hover:underline">Limpiar filtros</button>
+                        </div>
+                        
+                        <div class="filter-section">
+                            <div class="filter-title"><i class="fa-solid fa-trademark"></i> Marcas de <span id="current-category-name">Todos</span></div>
+                            <div id="brand-filters" class="max-h-48 overflow-y-auto space-y-1"></div>
+                        </div>
+                        
+                        <div class="filter-section">
+                            <div class="filter-title"><i class="fa-solid fa-dollar-sign"></i> Precio</div>
+                            <div class="flex justify-between text-xs text-motos-muted mb-2">
+                                <span>Min: $<span id="price-min-val">0</span></span>
+                                <span>Max: $<span id="price-max-val">2000000</span></span>
+                            </div>
+                            <input type="range" id="price-min" min="0" max="2000000" step="10000" value="0" oninput="updatePriceFilter()">
+                            <input type="range" id="price-max" min="0" max="2000000" step="10000" value="2000000" oninput="updatePriceFilter()" class="mt-2">
+                            <div class="price-range mt-3">
+                                <input type="number" id="price-min-input" placeholder="Mín" value="0" onchange="updatePriceFromInput()">
+                                <input type="number" id="price-max-input" placeholder="Máx" value="2000000" onchange="updatePriceFromInput()">
+                            </div>
+                        </div>
+                        
+                        <div class="filter-section">
+                            <div class="filter-title"><i class="fa-solid fa-list"></i> Tipología</div>
+                            <div class="filter-option"><input type="checkbox" value="Complementos" onchange="applyFilters()"> <label>Complementos</label></div>
+                            <div class="filter-option"><input type="checkbox" value="Limpieza exterior" onchange="applyFilters()"> <label>Limpieza exterior</label></div>
+                            <div class="filter-option"><input type="checkbox" value="Lubricantes" onchange="applyFilters()"> <label>Lubricantes</label></div>
+                        </div>
+                        
+                        <div class="filter-section">
+                            <div class="filter-title"><i class="fa-solid fa-box"></i> Estado</div>
+                            <div class="filter-option"><input type="checkbox" value="stock" onchange="applyFilters()"> <label>En stock</label></div>
+                            <div class="filter-option"><input type="checkbox" value="oferta" onchange="applyFilters()"> <label>Oferta flash</label></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex-1">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+                        <div class="text-motos-muted text-sm">
+                            Mostrando <span id="results-count">0</span> resultados
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="text-sm text-motos-muted">Ordenar por:</span>
+                            <select id="sort-order" onchange="applyFilters()" class="bg-motos-bg border border-motos-border text-motos-text px-3 py-1.5 rounded-lg text-sm focus:outline-none focus:border-motos-accent">
+                                <option value="relevance">Relevancia</option>
+                                <option value="price-asc">Precio: menor a mayor</option>
+                                <option value="price-desc">Precio: mayor a menor</option>
+                                <option value="name-asc">Nombre: A-Z</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div id="catalog-list" class="space-y-4"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VISTA: CARRITO -->
+        <div id="view-cart" class="view-section hidden py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-oswald font-bold uppercase tracking-wide text-motos-text mb-8"><i class="fa-solid fa-cart-shopping text-motos-accent mr-3"></i>Tu <span class="text-motos-accent">Compra</span></h2>
+            <div class="flex flex-col lg:flex-row gap-8">
+                <div class="flex-1">
+                    <div class="bg-motos-card border border-motos-border rounded-xl p-6" id="cart-items-container">
+                        <div class="text-center py-10 text-motos-muted font-bold">
+                            <i class="fa-solid fa-cart-arrow-down text-4xl mb-3"></i><br>Tu carrito está vacío.
+                        </div>
+                    </div>
+                </div>
+                <div class="w-full lg:w-96">
+                    <div class="bg-motos-card border border-motos-border rounded-xl p-6 sticky top-28">
+                        <h3 class="font-oswald text-2xl font-bold uppercase text-motos-text mb-4 border-b border-motos-border pb-2">Resumen</h3>
+                        <div class="space-y-3 mb-6 text-motos-text">
+                            <div class="flex justify-between"><span>Subtotal:</span> <span id="cart-subtotal" class="font-bold">$ 0</span></div>
+                            <div class="flex justify-between text-green-500"><span>Envío:</span> <span>¡Gratis!</span></div>
+                            <div class="flex justify-between text-xl font-oswald font-bold mt-4 pt-4 border-t border-motos-border text-motos-accent">
+                                <span>TOTAL:</span> <span id="cart-total">$ 0</span>
+                            </div>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="bg-motos-bg border border-green-500/30 rounded-lg p-3 text-center mb-4">
+                                <i class="fa-brands fa-whatsapp text-green-500 mr-2 text-xl"></i>
+                                <span class="text-sm">Pago contraentrega - Confirmamos por WhatsApp</span>
+                            </div>
+                            <input type="text" id="checkout-name" placeholder="Nombre completo *" class="w-full bg-motos-bg border border-motos-border text-motos-text px-4 py-2 rounded focus:outline-none focus:border-motos-accent">
+                            <input type="tel" id="checkout-phone" placeholder="Teléfono de contacto (WhatsApp) *" class="w-full bg-motos-bg border border-motos-border text-motos-text px-4 py-2 rounded focus:outline-none focus:border-motos-accent">
+                            <input type="text" id="checkout-address" placeholder="Dirección de envío *" class="w-full bg-motos-bg border border-motos-border text-motos-text px-4 py-2 rounded focus:outline-none focus:border-motos-accent">
+                            <textarea id="checkout-notes" placeholder="Notas adicionales (opcional)" rows="2" class="w-full bg-motos-bg border border-motos-border text-motos-text px-4 py-2 rounded focus:outline-none focus:border-motos-accent"></textarea>
+                            <button onclick="processCheckout()" id="btn-checkout" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg uppercase tracking-wider transition-colors shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+                                <i class="fa-brands fa-whatsapp"></i> Confirmar Pedido por WhatsApp
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VISTA: FAVORITOS -->
+        <div id="view-favorites" class="view-section hidden py-12 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-oswald font-bold uppercase tracking-wide text-motos-text mb-8"><i class="fa-solid fa-heart text-motos-accent mr-3"></i>Mis <span class="text-motos-accent">Favoritos</span></h2>
+            <div id="favorites-list" class="space-y-4"></div>
+        </div>
+    </main>
+
+    <!-- Comparador Panel Flotante -->
+    <div id="comparator-panel" class="comparator-panel">
+        <span class="text-sm font-bold">Comparar (<span id="compare-count">0</span>/4)</span>
+        <div id="compare-items-container" class="flex gap-2 flex-wrap"></div>
+        <button onclick="openComparatorModal()" class="bg-motos-accent text-white px-3 py-1 rounded-lg text-sm">Comparar</button>
+        <button onclick="clearCompareList()" class="text-gray-400 text-sm">Limpiar</button>
+    </div>
+
+    <!-- Modal Comparador -->
+    <div id="comparator-modal">
+        <div class="comparator-modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-oswald font-bold">Comparador de Productos</h2>
+                <button onclick="closeComparatorModal()" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+            </div>
+            <div id="comparator-table-container"></div>
+        </div>
+    </div>
+
+    <!-- Modal Detalle Producto -->
+    <div id="product-detail-modal">
+        <div class="product-detail-content">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-oswald font-bold" id="detail-title">Detalle del Producto</h2>
+                <button onclick="closeProductDetailModal()" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+            </div>
+            <div id="product-detail-container"></div>
+        </div>
+    </div>
+
+    <!-- Modal de búsqueda -->
+    <div id="search-modal" class="fixed inset-0 z-[60] hidden modal-overlay flex items-start justify-center pt-20 fade-in" style="background: rgba(0,0,0,0.8); backdrop-filter: blur(8px);">
+        <div class="bg-motos-card border border-motos-border rounded-2xl max-w-2xl w-full mx-4 shadow-2xl">
+            <div class="p-4 border-b border-motos-border flex items-center gap-3">
+                <i class="fa-solid fa-search text-motos-muted"></i>
+                <input type="text" id="search-input" placeholder="Buscar productos..." class="flex-1 bg-transparent border-none outline-none text-motos-text">
+                <button onclick="closeSearchModal()" class="text-motos-muted hover:text-motos-accent"><i class="fa-solid fa-times"></i></button>
+            </div>
+            <div id="search-results" class="max-h-96 overflow-y-auto p-2"></div>
+        </div>
+    </div>
+
+    <div id="toast-container" class="fixed bottom-24 right-6 z-50 space-y-2"></div>
+
+    <!-- Chat Button -->
+    <button onclick="toggleChat()" class="fixed bottom-6 right-6 w-14 h-14 bg-motos-accent text-white rounded-full shadow-lg flex items-center justify-center text-2xl hover:scale-110 transition-transform z-50">
+        <i class="fa-solid fa-robot"></i>
+    </button>
+
+    <!-- Chat Widget -->
+    <div id="chat-widget" class="fixed bottom-24 right-6 w-[380px] max-w-[calc(100vw-3rem)] h-[500px] bg-motos-card border border-motos-border rounded-xl shadow-2xl flex flex-col z-50 chat-hidden">
+        <div class="bg-motos-bg border-b border-motos-border p-4 rounded-t-xl flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-full bg-motos-accent flex items-center justify-center text-white"><i class="fa-solid fa-motorcycle"></i></div>
+                <div><h4 class="font-bold text-sm">MotosBot IA</h4><span class="text-[10px] text-green-500">En línea</span></div>
+            </div>
+            <button onclick="toggleChat()" class="text-motos-muted hover:text-motos-accent"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div id="chat-messages" class="flex-1 p-4 overflow-y-auto space-y-3 text-sm">
+            <div class="flex items-start">
+                <div class="chat-bubble-ai p-3 max-w-[85%]">
+                    ¡Hola! Soy MotosBot 🤖<br><br>
+                    Puedo ayudarte a encontrar productos en nuestro catálogo. Pregúntame por:<br>
+                    • <strong>Marca</strong> (Edge, Shark, Shoei, AGV, LS2, Cardo, Sena, etc.)<br>
+                    • <strong>Categoría</strong> (Cascos, Intercomunicadores, Cajas, Accesorios, Repuestos)<br>
+                    • <strong>Precio</strong> (ej: "cascos bajo 500 mil")<br>
+                    • <strong>Productos en oferta</strong><br><br>
+                    ¿En qué puedo ayudarte?
+                </div>
+            </div>
+        </div>
+        <div class="p-3 bg-motos-bg border-t border-motos-border rounded-b-xl flex gap-2">
+            <input type="text" id="chat-input" placeholder="Escribe tu pregunta..." class="flex-1 bg-motos-card border border-motos-border text-motos-text px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-motos-accent" onkeypress="handleChatKeyPress(event)">
+            <button onclick="sendChatMessage()" class="bg-motos-accent text-white w-10 h-10 rounded-lg flex items-center justify-center hover:bg-motos-accentHover transition"><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    
+    <script>
+        // BASE DE DATOS COMPLETA
+        const ALL_PRODUCTS = [
+            // Cascos
+            { id: 1, category: 'Casco', brand: 'Edge', name: 'CASCO FLY FORMULA CP', price: 338661, description: 'Casco de alto rendimiento. Ideal para pilotos exigentes. Cuenta con sistema de ventilación avanzado y visor antirrayas.', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTyj1slOtP5wULYzwSoC6p74Fd0m5EwHyumg&s', images: ['https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTyj1slOtP5wULYzwSoC6p74Fd0m5EwHyumg&s', 'https://placehold.co/400x400/262626/ff4500?text=Imagen+2', 'https://placehold.co/400x400/262626/ff4500?text=Imagen+3'], rating: 5, typology: 'Complementos', inStock: true, isOffer: true },
+            { id: 2, category: 'Casco', brand: 'Shark', name: 'SHARK SPARTAN GT PRO CARBON', price: 1500000, description: 'Casco de carbono ultraligero. Homologación ECE 22.06. Incluye visor antifog y sistema de ventilación optimizado.', image: 'https://www.garciamotos.com/8600-large_default/casco-shark-spartan-gt-pro-carbon-guintoli.jpg', images: ['https://www.garciamotos.com/8600-large_default/casco-shark-spartan-gt-pro-carbon-guintoli.jpg', 'https://placehold.co/400x400/262626/ff4500?text=Shark+2'], rating: 5, typology: 'Complementos', inStock: true, isOffer: false },
+            { id: 3, category: 'Casco', brand: 'Shoei', name: 'SHOEI GT-AIR 3', price: 1800000, description: 'Casco touring de alta gama. Visor solar integrado, sistema de ventilación optimizado y máxima comodidad.', image: 'https://www.motostorm.it/images/products/large/caschi_integrali/shoei_gtair3_smart_grigio.jpg', images: ['https://www.motostorm.it/images/products/large/caschi_integrali/shoei_gtair3_smart_grigio.jpg'], rating: 5, typology: 'Complementos', inStock: true, isOffer: true },
+            { id: 4, category: 'Casco', brand: 'AGV', name: 'AGV K1 S', price: 1100000, description: 'Casco integral con diseño aerodinámico derivado del Pista GP RR.', image: 'https://www.chromeburner.com/media/catalog/product/cache/1edb22ea9a482637ef3a9d592f2e211a/2/1/2118356002_018_1.jpg', images: ['https://www.chromeburner.com/media/catalog/product/cache/1edb22ea9a482637ef3a9d592f2e211a/2/1/2118356002_018_1.jpg'], rating: 5, typology: 'Complementos', inStock: true, isOffer: false },
+            { id: 5, category: 'Casco', brand: 'LS2', name: 'LS2 VALIANT II', price: 980000, description: 'Casco modular con doble homologación. Visor solar integrado.', image: 'https://inducascos.vtexassets.com/arquivos/ids/1904837/CASCO-INTEGRAL-LS2-FF808-STREAM-II-SOLID-Negro-Humo-Claro-Iridium-Plateado.jpg', images: ['https://inducascos.vtexassets.com/arquivos/ids/1904837/CASCO-INTEGRAL-LS2-FF808-STREAM-II-SOLID-Negro-Humo-Claro-Iridium-Plateado.jpg'], rating: 5, typology: 'Complementos', inStock: true, isOffer: false },
+            // Intercomunicadores
+            { id: 6, category: 'Intercom', brand: 'Cardo', name: 'CARDO PACKTALK EDGE', price: 850000, description: 'Sistema Mesh con alcance 1.6km. Comandos de voz y sonido JBL.', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0yAgZEdaqoXYaf1ol5oNGXcsLwh06BDqmUA&s', images: ['https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0yAgZEdaqoXYaf1ol5oNGXcsLwh06BDqmUA&s'], rating: 5, typology: 'Complementos', inStock: true, isOffer: true },
+            { id: 7, category: 'Intercom', brand: 'Sena', name: 'SENA 50S', price: 780000, description: 'Bluetooth 5.0 con tecnología Mesh 2.0.', image: 'https://all2bikes.com/cdn/shop/files/50S-01_1300PX.webp', images: ['https://all2bikes.com/cdn/shop/files/50S-01_1300PX.webp'], rating: 5, typology: 'Complementos', inStock: true, isOffer: false },
+            { id: 8, category: 'Intercom', brand: 'Lexin', name: 'LEXIN G16', price: 320000, description: 'Intercomunicador económico con alcance 1200m.', image: 'https://http2.mlstatic.com/D_NQ_NP_997918-MCO92108783854_092025-O.webp', images: ['https://http2.mlstatic.com/D_NQ_NP_997918-MCO92108783854_092025-O.webp'], rating: 5, typology: 'Complementos', inStock: true, isOffer: false },
+            // Cajas
+            { id: 9, category: 'Caja', brand: 'Shad', name: 'SHAD SH58X', price: 650000, description: 'Caja expandible 46-58L. Capacidad para 2 cascos.', image: 'https://http2.mlstatic.com/D_Q_NP_2X_981955-MCO109816470626_042026-T.webp', images: ['https://http2.mlstatic.com/D_Q_NP_2X_981955-MCO109816470626_042026-T.webp'], rating: 5, typology: 'Lubricantes', inStock: true, isOffer: false },
+            { id: 10, category: 'Caja', brand: 'Givi', name: 'GIVI V47', price: 720000, description: 'Baúl 47L con tecnología Monokey.', image: 'https://www.givi.es/FILES/catalogo/givi-bauletti-moto-in-alluminio-thumb-hp.jpg', images: ['https://www.givi.es/FILES/catalogo/givi-bauletti-moto-in-alluminio-thumb-hp.jpg'], rating: 5, typology: 'Lubricantes', inStock: true, isOffer: true },
+            // Accesorios
+            { id: 11, category: 'Accesorio', brand: 'Edge', name: 'FILTRO EDGE RACING', price: 95000, description: 'Filtro de aire alto flujo.', image: 'https://http2.mlstatic.com/D_NQ_NP_601696-MCO42377562408_062020-O.webp', images: ['https://http2.mlstatic.com/D_NQ_NP_601696-MCO42377562408_062020-O.webp'], rating: 5, typology: 'Limpieza exterior', inStock: true, isOffer: true },
+            { id: 12, category: 'Accesorio', brand: 'Honda', name: 'KIT FRENOS HONDA', price: 189000, description: 'Pastillas de freno originales Honda.', image: 'https://acdn-us.mitiendanube.com/stores/001/167/709/products/img_1714-7076225dc791e438d017212248423276-640-0.webp', images: ['https://acdn-us.mitiendanube.com/stores/001/167/709/products/img_1714-7076225dc791e438d017212248423276-640-0.webp'], rating: 5, typology: 'Lubricantes', inStock: true, isOffer: false },
+            // Repuestos
+            { id: 13, category: 'Repuesto', brand: 'Brembo', name: 'PASTILLAS BREMBO', price: 120000, description: 'Pastillas sinterizadas para alto rendimiento.', image: 'https://www.americanmotos.com/cdn/shop/files/TEMPORALMENTESINIMAGEN-PASTILLADEFRENOBREMBO07029XS.jpg', images: ['https://www.americanmotos.com/cdn/shop/files/TEMPORALMENTESINIMAGEN-PASTILLADEFRENOBREMBO07029XS.jpg'], rating: 5, typology: 'Lubricantes', inStock: true, isOffer: false },
+            { id: 14, category: 'Repuesto', brand: 'NGK', name: 'BUJÍA NGK IRIDIUM', price: 35000, description: 'Bujía de iridio para mayor duración.', image: 'https://marinecenter.com.co/wp-content/uploads/2023/09/45.jpg', images: ['https://marinecenter.com.co/wp-content/uploads/2023/09/45.jpg'], rating: 5, typology: 'Complementos', inStock: true, isOffer: true },
+            // Defensas
+            { id: 15, category: 'Defensa', brand: 'Puig', name: 'DEFENSAS PUIG RACING', price: 280000, description: 'Sliders de protección para motor.', image: 'https://placehold.co/400x400/262626/ff4500?text=Defensas+Puig', images: ['https://placehold.co/400x400/262626/ff4500?text=Defensas+Puig'], rating: 5, typology: 'Complementos', inStock: true, isOffer: false },
+            // Chalecos
+            { id: 16, category: 'Chaleco', brand: 'Alpinestars', name: 'CHALECO ALPINESTARS PRO', price: 450000, description: 'Chaleco protector con certificación.', image: 'https://placehold.co/400x400/262626/ff4500?text=Chaleco', images: ['https://placehold.co/400x400/262626/ff4500?text=Chaleco'], rating: 5, typology: 'Complementos', inStock: true, isOffer: true },
+            // Guantes
+            { id: 17, category: 'Guantes', brand: 'Nolana', name: 'GUANTES NOLANA PROTECT', price: 75000, description: 'Guantes con protección en nudillos.', image: 'https://vetrox.co/wp-content/uploads/2023/02/GUANTES-PARA-MOTOCICLETAS-ECONOMICO.jpg', images: ['https://vetrox.co/wp-content/uploads/2023/02/GUANTES-PARA-MOTOCICLETAS-ECONOMICO.jpg'], rating: 5, typology: 'Complementos', inStock: true, isOffer: false },
+            // Botas
+            { id: 18, category: 'Botas', brand: 'Alpinestars', name: 'BOTAS ALPINESTARS SMX', price: 680000, description: 'Botas de moto con protección.', image: 'https://placehold.co/400x400/262626/ff4500?text=Botas', images: ['https://placehold.co/400x400/262626/ff4500?text=Botas'], rating: 5, typology: 'Complementos', inStock: true, isOffer: false },
+            // Iluminación
+            { id: 19, category: 'Iluminacion', brand: 'LedPro', name: 'KIT LED FAROS', price: 120000, description: 'Iluminación LED para moto.', image: 'https://placehold.co/400x400/262626/ff4500?text=LED', images: ['https://placehold.co/400x400/262626/ff4500?text=LED'], rating: 5, typology: 'Limpieza exterior', inStock: true, isOffer: true },
+            // Herramientas
+            { id: 20, category: 'Herramientas', brand: 'Stanley', name: 'KIT HERRAMIENTAS MOTO', price: 85000, description: 'Kit básico de herramientas.', image: 'https://placehold.co/400x400/262626/ff4500?text=Herramientas', images: ['https://placehold.co/400x400/262626/ff4500?text=Herramientas'], rating: 5, typology: 'Complementos', inStock: true, isOffer: false }
+        ];
+
+        let cart = [], favorites = [];
+        let currentCategory = 'home';
+        let currentSelectedCategory = 'all';
+        let compareList = [];
+        const WHATSAPP_NUMBER = "573001234567";
+
+        const categories = [
+            { id: 'all', name: 'Todos', icon: 'fa-solid fa-grid-2' },
+            { id: 'Casco', name: 'Cascos', icon: 'fa-solid fa-helmet-safety' },
+            { id: 'Intercom', name: 'Intercomunicadores', icon: 'fa-solid fa-bluetooth' },
+            { id: 'Caja', name: 'Cajas y Maleteros', icon: 'fa-solid fa-suitcase' },
+            { id: 'Accesorio', name: 'Accesorios', icon: 'fa-solid fa-motorcycle' },
+            { id: 'Repuesto', name: 'Repuestos', icon: 'fa-solid fa-gear' },
+            { id: 'Defensa', name: 'Defensas / Sliders', icon: 'fa-solid fa-shield-halved' },
+            { id: 'Chaleco', name: 'Chalecos / Chaquetas', icon: 'fa-solid fa-vest' },
+            { id: 'Guantes', name: 'Guantes', icon: 'fa-solid fa-hand-peace' },
+            { id: 'Botas', name: 'Botas', icon: 'fa-solid fa-boot' },
+            { id: 'Iluminacion', name: 'Iluminación LED', icon: 'fa-solid fa-lightbulb' },
+            { id: 'Herramientas', name: 'Herramientas', icon: 'fa-solid fa-wrench' }
+        ];
+
+        // ========== FUNCIONES DEL COMPARADOR ==========
+        function toggleCompare(productId) {
+            const product = ALL_PRODUCTS.find(p => p.id === productId);
+            const index = compareList.findIndex(p => p.id === productId);
+            if(index === -1) {
+                if(compareList.length >= 4) {
+                    showToast('Solo puedes comparar hasta 4 productos a la vez', 'error');
+                    return;
+                }
+                compareList.push(product);
+                showToast(`${product.name} añadido para comparar`, 'success');
+            } else {
+                compareList.splice(index, 1);
+                showToast(`${product.name} eliminado de la comparación`, 'info');
+            }
+            updateComparePanel();
+            refreshStoreAfterCompare();
+        }
+
+        function updateComparePanel() {
+            const panel = document.getElementById('comparator-panel');
+            const countSpan = document.getElementById('compare-count');
+            const container = document.getElementById('compare-items-container');
+            
+            countSpan.textContent = compareList.length;
+            
+            if(compareList.length > 0) {
+                panel.classList.add('active');
+                container.innerHTML = compareList.map(p => `
+                    <div class="comparator-item">
+                        <img src="${p.image}" alt="${p.name}">
+                        <span class="truncate max-w-[100px]">${p.name.substring(0, 20)}</span>
+                        <button onclick="toggleCompare(${p.id})">&times;</button>
+                    </div>
+                `).join('');
+            } else {
+                panel.classList.remove('active');
+            }
+        }
+
+        function openComparatorModal() {
+            if(compareList.length < 2) {
+                showToast('Selecciona al menos 2 productos para comparar', 'error');
+                return;
+            }
+            const modal = document.getElementById('comparator-modal');
+            const container = document.getElementById('comparator-table-container');
+            
+            let tableHtml = '<table class="comparison-table"><thead><tr><th>Característica</th>';
+            compareList.forEach(p => {
+                tableHtml += `<th class="text-center"><img src="${p.image}" class="w-20 h-20 object-contain mx-auto mb-2 rounded"><div class="font-bold">${p.name}</div><div class="text-motos-accent text-sm">$${p.price.toLocaleString('es-CO')}</div></th>`;
+            });
+            tableHtml += '</tr></thead><tbody>';
+            
+            const features = [
+                { label: 'Marca', getValue: (p) => p.brand },
+                { label: 'Categoría', getValue: (p) => p.category },
+                { label: 'Descripción', getValue: (p) => p.description.substring(0, 100) + '...' },
+                { label: 'Precio', getValue: (p) => `$${p.price.toLocaleString('es-CO')}` },
+                { label: 'Calificación', getValue: (p) => '★★★★★' },
+                { label: 'Stock', getValue: (p) => p.inStock ? '✅ En stock' : '❌ Agotado' },
+                { label: 'Oferta', getValue: (p) => p.isOffer ? '🔥 En oferta' : '-' },
+                { label: 'Acciones', getValue: (p) => `<button onclick="addToCartAndCloseCompare(${p.id})" class="bg-motos-accent text-white px-3 py-1 rounded text-sm">Añadir al carrito</button>` }
+            ];
+            
+            features.forEach(feature => {
+                tableHtml += `<tr><th>${feature.label}</th>`;
+                compareList.forEach(p => {
+                    tableHtml += `<td>${feature.getValue(p)}</td>`;
+                });
+                tableHtml += '</tr>';
+            });
+            
+            tableHtml += '</tbody></table>';
+            container.innerHTML = tableHtml;
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function addToCartAndCloseCompare(productId) {
+            addToCart(productId);
+            closeComparatorModal();
+        }
+        
+        function closeComparatorModal() {
+            document.getElementById('comparator-modal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        function clearCompareList() {
+            compareList = [];
+            updateComparePanel();
+            refreshStoreAfterCompare();
+            showToast('Lista de comparación limpiada', 'info');
+        }
+        
+        function refreshStoreAfterCompare() {
+            if(currentCategory === 'catalog') applyFilters();
+            else if(currentCategory === 'home') renderOffers();
+            else if(currentCategory === 'favorites') renderFavoritesView();
+        }
+
+        // ========== FUNCIONES DE DETALLE DE PRODUCTO ==========
+        function openProductDetail(productId) {
+            const product = ALL_PRODUCTS.find(p => p.id === productId);
+            if(!product) return;
+            
+            const modal = document.getElementById('product-detail-modal');
+            const container = document.getElementById('product-detail-container');
+            const titleSpan = document.getElementById('detail-title');
+            titleSpan.textContent = product.name;
+            
+            const galleryImages = product.images && product.images.length > 0 ? product.images : [product.image];
+            
+            let swiperHtml = `
+                <div class="product-detail-gallery">
+                    <div class="swiper detail-swiper" id="detail-swiper">
+                        <div class="swiper-wrapper">
+                            ${galleryImages.map(img => `<div class="swiper-slide"><img src="${img}" alt="${product.name}" onerror="this.src='https://placehold.co/400x400/262626/ff4500?text=Imagen'"></div>`).join('')}
+                        </div>
+                        <div class="swiper-button-next"></div>
+                        <div class="swiper-button-prev"></div>
+                        <div class="swiper-pagination"></div>
+                    </div>
+                </div>
+                <div class="mt-6">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-motos-muted text-sm">${product.category} / ${product.brand}</p>
+                            <div class="flex items-center gap-2 mt-1">
+                                <span class="stars">★★★★★</span>
+                                <span class="text-motos-muted text-xs">(5 reseñas)</span>
+                            </div>
+                        </div>
+                        ${product.isOffer ? '<span class="hot-deals-badge">HOT DEALS -20%</span>' : ''}
+                    </div>
+                    <div class="mt-4">
+                        <p class="text-gray-300 leading-relaxed">${product.description}</p>
+                    </div>
+                    <div class="mt-6 flex items-center justify-between">
+                        <div>
+                            <span class="text-3xl font-oswald font-bold text-motos-accent">$${product.price.toLocaleString('es-CO')}</span>
+                        </div>
+                        <div class="flex gap-3">
+                            <button onclick="toggleFavoriteAndCloseDetail(${product.id})" class="px-4 py-2 rounded-lg border border-motos-border hover:border-motos-accent transition">
+                                <i class="fa-${favorites.some(f => f.id === product.id) ? 'solid' : 'regular'} fa-heart text-${favorites.some(f => f.id === product.id) ? 'motos-accent' : 'motos-muted'}"></i> Favorito
+                            </button>
+                            <button onclick="addToCartAndCloseDetail(${product.id})" class="bg-motos-accent hover:bg-motos-accentHover text-white px-6 py-2 rounded-lg font-bold transition" ${!product.inStock ? 'disabled style="opacity:0.5;cursor:not-allowed"' : ''}>
+                                <i class="fa-solid fa-cart-shopping"></i> Añadir al carrito
+                            </button>
+                        </div>
+                    </div>
+                    ${!product.inStock ? '<div class="mt-4 p-3 bg-red-900/30 rounded-lg text-center"><span class="text-red-400">Producto agotado temporalmente</span></div>' : ''}
+                </div>
+            `;
+            
+            container.innerHTML = swiperHtml;
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            setTimeout(() => {
+                new Swiper('#detail-swiper', {
+                    loop: true,
+                    autoplay: { delay: 4000 },
+                    pagination: { el: '.swiper-pagination', clickable: true },
+                    navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+                    effect: 'slide'
+                });
+            }, 100);
+        }
+        
+        function closeProductDetailModal() {
+            document.getElementById('product-detail-modal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        function addToCartAndCloseDetail(productId) {
+            addToCart(productId);
+            closeProductDetailModal();
+        }
+        
+        function toggleFavoriteAndCloseDetail(productId) {
+            const product = ALL_PRODUCTS.find(p => p.id === productId);
+            const index = favorites.findIndex(f => f.id === productId);
+            if(index === -1) { favorites.push(product); showToast(`${product.name} añadido a favoritos`, 'success'); } 
+            else { favorites.splice(index, 1); showToast(`${product.name} eliminado de favoritos`, 'info'); }
+            saveFavorites();
+            updateFavoritesCount();
+            openProductDetail(productId);
+        }
+
+        // ========== FUNCIONES ORIGINALES (sin cambios) ==========
+        function init() {
+            loadFromLocalStorage();
+            updateFavoritesCount();
+            renderHomeCategories();
+            renderOffers();
+            applyFilters();
+            setupEventListeners();
+            updateComparePanel();
+        }
+
+        function renderHomeCategories() {
+            const container = document.getElementById('home-categories');
+            if(container) {
+                container.innerHTML = categories.map(cat => `
+                    <div class="home-category-card" onclick="showBrandsForCategory('${cat.id}', '${cat.name}')">
+                        <i class="${cat.icon}"></i>
+                        <h3>${cat.name}</h3>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function getBrandsByCategoryId(categoryId) {
+            if(categoryId === 'all') return [...new Set(ALL_PRODUCTS.map(p => p.brand))].sort();
+            return [...new Set(ALL_PRODUCTS.filter(p => p.category === categoryId).map(p => p.brand))].sort();
+        }
+
+        function showBrandsForCategory(categoryId, categoryName) {
+            const brands = getBrandsByCategoryId(categoryId);
+            const dropdown = document.getElementById('brands-dropdown');
+            const title = document.getElementById('dropdown-title');
+            const brandsContainer = document.getElementById('brands-list');
+            title.textContent = `Marcas de ${categoryName}`;
+            brandsContainer.innerHTML = brands.map(brand => `<div class="brand-chip" onclick="selectBrandAndCategory('${categoryId}', '${brand}')">${brand}</div>`).join('');
+            dropdown.classList.add('active');
+            dropdown.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function selectBrandAndCategory(categoryId, brand) {
+            currentSelectedCategory = categoryId;
+            const categoryNames = { 'all': 'Todos', 'Casco': 'Cascos', 'Intercom': 'Intercomunicadores', 'Caja': 'Cajas y Maleteros', 'Accesorio': 'Accesorios', 'Repuesto': 'Repuestos', 'Defensa': 'Defensas / Sliders', 'Chaleco': 'Chalecos / Chaquetas', 'Guantes': 'Guantes', 'Botas': 'Botas', 'Iluminacion': 'Iluminación LED', 'Herramientas': 'Herramientas' };
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent.trim() === categoryNames[categoryId]) btn.classList.add('active');
+            });
+            clearFiltersWithoutToast();
+            setTimeout(() => {
+                const brandCheckbox = document.querySelector(`#brand-filters input[value="${brand}"]`);
+                if(brandCheckbox) brandCheckbox.checked = true;
+                renderBrandFilters();
+                applyFilters();
+            }, 100);
+            closeBrandsDropdown();
+            navigate('catalog');
+            showToast(`Mostrando productos de ${brand} en ${categoryNames[categoryId]}`, 'success');
+        }
+
+        function closeBrandsDropdown() { document.getElementById('brands-dropdown').classList.remove('active'); }
+        function clearFiltersWithoutToast() {
+            document.querySelectorAll('#brand-filters input').forEach(cb => cb.checked = false);
+            const minSlider = document.getElementById('price-min'), maxSlider = document.getElementById('price-max');
+            const minInput = document.getElementById('price-min-input'), maxInput = document.getElementById('price-max-input');
+            if(minSlider) minSlider.value = 0; if(maxSlider) maxSlider.value = 2000000;
+            if(minInput) minInput.value = 0; if(maxInput) maxInput.value = 2000000;
+            const minVal = document.getElementById('price-min-val'), maxVal = document.getElementById('price-max-val');
+            if(minVal) minVal.innerText = '0'; if(maxVal) maxVal.innerText = '2.000.000';
+            document.querySelectorAll('.filter-section input[value="Complementos"], .filter-section input[value="Limpieza exterior"], .filter-section input[value="Lubricantes"]').forEach(cb => cb.checked = false);
+            document.querySelectorAll('.filter-section input[value="stock"], .filter-section input[value="oferta"]').forEach(cb => cb.checked = false);
+            const sortOrder = document.getElementById('sort-order'); if(sortOrder) sortOrder.value = 'relevance';
+        }
+
+        function renderOffers() {
+            const offers = ALL_PRODUCTS.filter(p => p.isOffer === true);
+            const container = document.getElementById('offers-list');
+            if(container) {
+                if(offers.length === 0) container.innerHTML = '<div class="text-center py-10 text-motos-muted">No hay productos en oferta actualmente</div>';
+                else container.innerHTML = offers.map(p => createProductListItem(p)).join('');
+            }
+        }
+
+        function getBrandsByCategory(category) {
+            if(category === 'all') return [...new Set(ALL_PRODUCTS.map(p => p.brand))].sort();
+            return [...new Set(ALL_PRODUCTS.filter(p => p.category === category).map(p => p.brand))].sort();
+        }
+
+        function renderBrandFilters() {
+            const brands = getBrandsByCategory(currentSelectedCategory);
+            const container = document.getElementById('brand-filters');
+            const categoryNameSpan = document.getElementById('current-category-name');
+            const catNames = { 'all': 'Todos', 'Casco': 'Cascos', 'Intercom': 'Intercomunicadores', 'Caja': 'Cajas', 'Accesorio': 'Accesorios', 'Repuesto': 'Repuestos', 'Defensa': 'Defensas', 'Chaleco': 'Chalecos', 'Guantes': 'Guantes', 'Botas': 'Botas', 'Iluminacion': 'Iluminación', 'Herramientas': 'Herramientas' };
+            if(categoryNameSpan) categoryNameSpan.textContent = catNames[currentSelectedCategory] || currentSelectedCategory;
+            if(container) {
+                if(brands.length === 0) container.innerHTML = '<div class="text-gray-500 text-xs">No hay marcas disponibles</div>';
+                else container.innerHTML = brands.map(brand => `<div class="filter-option"><input type="checkbox" value="${brand}" onchange="applyFilters()"><label>${brand}</label></div>`).join('');
+            }
+        }
+
+        function applyFilters() {
+            let filtered = [...ALL_PRODUCTS];
+            if(currentSelectedCategory !== 'all') filtered = filtered.filter(p => p.category === currentSelectedCategory);
+            const selectedBrands = Array.from(document.querySelectorAll('#brand-filters input:checked')).map(cb => cb.value);
+            if(selectedBrands.length > 0) filtered = filtered.filter(p => selectedBrands.includes(p.brand));
+            const minPrice = parseInt(document.getElementById('price-min')?.value) || 0;
+            const maxPrice = parseInt(document.getElementById('price-max')?.value) || 2000000;
+            filtered = filtered.filter(p => p.price >= minPrice && p.price <= maxPrice);
+            const selectedTypologies = Array.from(document.querySelectorAll('.filter-section input[value="Complementos"], .filter-section input[value="Limpieza exterior"], .filter-section input[value="Lubricantes"]')).filter(cb => cb.checked).map(cb => cb.value);
+            if(selectedTypologies.length > 0) filtered = filtered.filter(p => selectedTypologies.includes(p.typology));
+            const inStockSelected = document.querySelector('.filter-section input[value="stock"]')?.checked;
+            const offerSelected = document.querySelector('.filter-section input[value="oferta"]')?.checked;
+            if(inStockSelected && !offerSelected) filtered = filtered.filter(p => p.inStock === true);
+            else if(!inStockSelected && offerSelected) filtered = filtered.filter(p => p.isOffer === true);
+            else if(inStockSelected && offerSelected) filtered = filtered.filter(p => p.inStock === true || p.isOffer === true);
+            const sortOrder = document.getElementById('sort-order')?.value || 'relevance';
+            if(sortOrder === 'price-asc') filtered.sort((a, b) => a.price - b.price);
+            else if(sortOrder === 'price-desc') filtered.sort((a, b) => b.price - a.price);
+            else if(sortOrder === 'name-asc') filtered.sort((a, b) => a.name.localeCompare(b.name));
+            const resultsCountEl = document.getElementById('results-count');
+            if(resultsCountEl) resultsCountEl.innerText = filtered.length;
+            renderCatalogList(filtered);
+        }
+        
+        function renderCatalogList(products) {
+            const container = document.getElementById('catalog-list');
+            if(container) {
+                if(products.length === 0) { container.innerHTML = '<div class="text-center py-10 text-motos-muted">No se encontraron productos con los filtros seleccionados.</div>'; return; }
+                container.innerHTML = products.map(p => createProductListItem(p)).join('');
+            }
+        }
+        
+        function updatePriceFilter() {
+            const minSlider = document.getElementById('price-min'), maxSlider = document.getElementById('price-max');
+            const minInput = document.getElementById('price-min-input'), maxInput = document.getElementById('price-max-input');
+            const minVal = document.getElementById('price-min-val'), maxVal = document.getElementById('price-max-val');
+            let min = parseInt(minSlider.value), max = parseInt(maxSlider.value);
+            if(min > max) { minSlider.value = max; min = max; }
+            if(minVal) minVal.innerText = min.toLocaleString('es-CO');
+            if(maxVal) maxVal.innerText = max.toLocaleString('es-CO');
+            if(minInput) minInput.value = min;
+            if(maxInput) maxInput.value = max;
+            applyFilters();
+        }
+        
+        function updatePriceFromInput() {
+            const minInput = document.getElementById('price-min-input'), maxInput = document.getElementById('price-max-input');
+            const minSlider = document.getElementById('price-min'), maxSlider = document.getElementById('price-max');
+            let min = parseInt(minInput?.value) || 0, max = parseInt(maxInput?.value) || 2000000;
+            if(min < 0) min = 0; if(max > 2000000) max = 2000000; if(min > max) min = max;
+            if(minSlider) minSlider.value = min; if(maxSlider) maxSlider.value = max;
+            const minVal = document.getElementById('price-min-val'), maxVal = document.getElementById('price-max-val');
+            if(minVal) minVal.innerText = min.toLocaleString('es-CO');
+            if(maxVal) maxVal.innerText = max.toLocaleString('es-CO');
+            applyFilters();
+        }
+        
+        function clearFilters() {
+            document.querySelectorAll('#brand-filters input').forEach(cb => cb.checked = false);
+            const minSlider = document.getElementById('price-min'), maxSlider = document.getElementById('price-max');
+            const minInput = document.getElementById('price-min-input'), maxInput = document.getElementById('price-max-input');
+            if(minSlider) minSlider.value = 0; if(maxSlider) maxSlider.value = 2000000;
+            if(minInput) minInput.value = 0; if(maxInput) maxInput.value = 2000000;
+            const minVal = document.getElementById('price-min-val'), maxVal = document.getElementById('price-max-val');
+            if(minVal) minVal.innerText = '0'; if(maxVal) maxVal.innerText = '2.000.000';
+            document.querySelectorAll('.filter-section input[value="Complementos"], .filter-section input[value="Limpieza exterior"], .filter-section input[value="Lubricantes"]').forEach(cb => cb.checked = false);
+            document.querySelectorAll('.filter-section input[value="stock"], .filter-section input[value="oferta"]').forEach(cb => cb.checked = false);
+            const sortOrder = document.getElementById('sort-order'); if(sortOrder) sortOrder.value = 'relevance';
+            applyFilters();
+            showToast('Filtros limpiados', 'info');
+        }
+
+        function loadFromLocalStorage() {
+            const savedCart = localStorage.getItem('motos_cart');
+            const savedFavorites = localStorage.getItem('motos_favorites');
+            const savedCompare = localStorage.getItem('motos_compare');
+            if (savedCart) cart = JSON.parse(savedCart);
+            if (savedFavorites) favorites = JSON.parse(savedFavorites);
+            if (savedCompare) compareList = JSON.parse(savedCompare);
+            updateCartCounter();
+        }
+
+        function saveCart() { localStorage.setItem('motos_cart', JSON.stringify(cart)); }
+        function saveFavorites() { localStorage.setItem('motos_favorites', JSON.stringify(favorites)); }
+        function saveCompare() { localStorage.setItem('motos_compare', JSON.stringify(compareList)); }
+
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            const colors = { success: 'bg-green-600', error: 'bg-red-600', info: 'bg-blue-600' };
+            const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', info: 'fa-info-circle' };
+            toast.className = `${colors[type]} text-white px-6 py-3 rounded-lg shadow-lg toast-notification flex items-center gap-3`;
+            toast.innerHTML = `<i class="fa-solid ${icons[type]}"></i><span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => { toast.remove(); }, 3000);
+        }
+
+        function navigate(view) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
+            document.getElementById('view-home').classList.add('hidden');
+            document.getElementById('view-catalog').classList.add('hidden');
+            document.getElementById('view-cart').classList.add('hidden');
+            document.getElementById('view-favorites').classList.add('hidden');
+            if(view === 'home') { document.getElementById('view-home').classList.remove('hidden'); renderOffers(); }
+            if(view === 'catalog') { document.getElementById('view-catalog').classList.remove('hidden'); applyFilters(); }
+            if(view === 'cart') { document.getElementById('view-cart').classList.remove('hidden'); renderCartView(); }
+            if(view === 'favorites') { document.getElementById('view-favorites').classList.remove('hidden'); renderFavoritesView(); }
+            currentCategory = view;
+            window.scrollTo(0, 0);
+        }
+
+        function selectCategory(category) {
+            currentSelectedCategory = category;
+            const categoryNames = { 'all': 'Todos', 'Casco': 'Cascos', 'Intercom': 'Intercomunicadores', 'Caja': 'Cajas y Maleteros', 'Accesorio': 'Accesorios', 'Repuesto': 'Repuestos', 'Defensa': 'Defensas / Sliders', 'Chaleco': 'Chalecos / Chaquetas', 'Guantes': 'Guantes', 'Botas': 'Botas', 'Iluminacion': 'Iluminación LED', 'Herramientas': 'Herramientas' };
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent.trim() === categoryNames[category]) btn.classList.add('active');
+            });
+            renderBrandFilters();
+            applyFilters();
+            navigate('catalog');
+        }
+
+        function createProductListItem(product) {
+            const isFav = favorites.some(f => f.id === product.id);
+            const isInCompare = compareList.some(p => p.id === product.id);
+            const hasHot = product.isOffer;
+            const categoryLabel = product.category.toUpperCase();
+            return `<div class="product-list-item fade-in" style="position:relative">${!product.inStock ? '<div class="out-of-stock-overlay"><span>AGOTADO</span></div>' : ''}<div class="product-list-image"><img src="${product.image}" alt="${product.name}" onerror="this.src='https://placehold.co/400x400/262626/ff4500?text=Imagen+no+disponible'"></div><div class="product-list-content"><div class="product-list-header"><div class="product-list-category">${categoryLabel} / ${product.brand}</div><div class="product-list-title">${product.name}${hasHot ? '<span class="hot-deals-badge">HOT DEALS -20%</span>' : ''}</div><div class="product-list-rating"><span class="stars">★★★★★</span><span class="text-motos-muted text-xs">(5 reseñas)</span></div></div><div class="product-list-description">${product.description}</div><div class="flex justify-between items-center mt-3 pt-3 border-t border-motos-border"><div class="product-list-price">$${product.price.toLocaleString('es-CO')}</div><div class="flex gap-2 flex-wrap"><button onclick="toggleCompare(${product.id})" class="compare-btn ${isInCompare ? 'active' : ''}" title="Comparar"><i class="fa-solid fa-chart-simple"></i> ${isInCompare ? 'Quitar' : 'Comparar'}</button><button onclick="toggleFavorite(${product.id})" class="px-4 py-2 rounded-lg border border-motos-border hover:border-motos-accent transition-colors flex items-center gap-2"><i class="fa-${isFav ? 'solid' : 'regular'} fa-heart text-${isFav ? 'motos-accent' : 'motos-muted'}"></i><span class="hidden sm:inline">Favorito</span></button><button onclick="openProductDetail(${product.id})" class="bg-motos-accent hover:bg-motos-accentHover text-white px-4 py-2 rounded-lg font-bold transition flex items-center gap-2"><i class="fa-solid fa-eye"></i> Ver</button></div></div></div></div>`;
+        }
+
+        function renderFavoritesView() {
+            const container = document.getElementById('favorites-list');
+            if(container) {
+                if(favorites.length === 0) container.innerHTML = '<div class="text-center py-10 text-motos-muted">No tienes favoritos aún.</div>';
+                else container.innerHTML = favorites.map(p => createProductListItem(p)).join('');
+            }
+        }
+
+        function toggleFavorite(productId) {
+            const product = ALL_PRODUCTS.find(p => p.id === productId);
+            const index = favorites.findIndex(f => f.id === productId);
+            if(index === -1) { favorites.push(product); showToast(`${product.name} añadido a favoritos`, 'success'); } 
+            else { favorites.splice(index, 1); showToast(`${product.name} eliminado de favoritos`, 'info'); }
+            saveFavorites();
+            updateFavoritesCount();
+            if(currentCategory === 'favorites') renderFavoritesView();
+            else if(currentCategory === 'catalog') applyFilters();
+            else if(currentCategory === 'home') renderOffers();
+        }
+
+        function updateFavoritesCount() {
+            const countEl = document.getElementById('favorites-count');
+            if(countEl) {
+                if(favorites.length > 0) { countEl.innerText = favorites.length; countEl.classList.remove('hidden'); } 
+                else { countEl.classList.add('hidden'); }
+            }
+        }
+
+        function addToCart(productId) {
+            const product = ALL_PRODUCTS.find(p => p.id === productId);
+            if(!product.inStock) { showToast('Producto agotado', 'error'); return; }
+            const existing = cart.find(i => i.id === productId);
+            if(existing) existing.quantity += 1;
+            else cart.push({ ...product, quantity: 1 });
+            saveCart();
+            updateCartCounter();
+            showToast(`${product.name} añadido al carrito`, 'success');
+        }
+
+        function updateCartCounter() {
+            const total = cart.reduce((s, i) => s + i.quantity, 0);
+            const counterEl = document.getElementById('cart-count');
+            if(counterEl) counterEl.innerText = total;
+        }
+
+        function updateCartItemQuantity(productId, delta) {
+            const item = cart.find(i => i.id === productId);
+            if(item) {
+                item.quantity += delta;
+                if(item.quantity <= 0) cart = cart.filter(i => i.id !== productId);
+                saveCart();
+                updateCartCounter();
+                renderCartView();
+            }
+        }
+
+        function removeFromCart(productId) {
+            cart = cart.filter(i => i.id !== productId);
+            saveCart();
+            updateCartCounter();
+            renderCartView();
+        }
+
+        function renderCartView() {
+            const container = document.getElementById('cart-items-container');
+            const subtotalEl = document.getElementById('cart-subtotal');
+            const totalEl = document.getElementById('cart-total');
+            if(cart.length === 0) {
+                if(container) container.innerHTML = '<div class="text-center py-10 text-motos-muted">Tu carrito está vacío.</div>';
+                if(subtotalEl) subtotalEl.innerText = "$ 0";
+                if(totalEl) totalEl.innerText = "$ 0";
+                return;
+            }
+            let total = 0, html = '<div class="space-y-4">';
+            cart.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                html += `<div class="flex justify-between items-center border-b border-motos-border pb-4"><div><h4 class="font-bold">${item.name}</h4><p class="text-xs text-motos-muted">${item.brand}</p></div><div class="flex items-center gap-3"><button onclick="updateCartItemQuantity(${item.id}, -1)" class="w-7 h-7 rounded bg-motos-border hover:bg-motos-accent transition">-</button><span>${item.quantity}</span><button onclick="updateCartItemQuantity(${item.id}, 1)" class="w-7 h-7 rounded bg-motos-border hover:bg-motos-accent transition">+</button><span class="font-bold">$${itemTotal.toLocaleString('es-CO')}</span><button onclick="removeFromCart(${item.id})" class="text-red-500 hover:text-red-400"><i class="fa-solid fa-trash"></i></button></div></div>`;
+            });
+            html += '</div>';
+            if(container) container.innerHTML = html;
+            if(subtotalEl) subtotalEl.innerText = `$ ${total.toLocaleString('es-CO')}`;
+            if(totalEl) totalEl.innerText = `$ ${total.toLocaleString('es-CO')}`;
+        }
+
+        function processCheckout() {
+            if(cart.length === 0) { showToast('Carrito vacío', 'error'); return; }
+            const name = document.getElementById('checkout-name')?.value;
+            const phone = document.getElementById('checkout-phone')?.value;
+            const address = document.getElementById('checkout-address')?.value;
+            const notes = document.getElementById('checkout-notes')?.value;
+            if(!name || !phone || !address) { showToast('Completa todos los campos obligatorios (*)', 'error'); return; }
+            const cleanPhone = phone.replace(/\D/g, '');
+            if(cleanPhone.length < 10) { showToast('Ingresa un número de teléfono válido (10 dígitos)', 'error'); return; }
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            let message = "🛵 *NUEVO PEDIDO - MOTOS TOP* 🛵%0A%0A📋 *DETALLES DEL CLIENTE*%0A👤 *Nombre:* ${name}%0A📞 *Teléfono:* ${phone}%0A📍 *Dirección:* ${address}%0A" + (notes ? `📝 *Notas:* ${notes}%0A` : '') + "%0A🛒 *PRODUCTOS SOLICITADOS*%0A┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈%0A";
+            cart.forEach((item, index) => { const itemTotal = item.price * item.quantity; message += `${index + 1}. *${item.name}*%0A   📦 Cantidad: ${item.quantity}%0A   💰 Subtotal: $${itemTotal.toLocaleString('es-CO')}%0A┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈%0A`; });
+            message += "%0A💰 *RESUMEN DE PAGO*%0A💲 *TOTAL A PAGAR:* $${total.toLocaleString('es-CO')}%0A🚚 *Método de pago:* Contraentrega (pagas al recibir)%0A%0A✅ *El cliente pagará al recibir el producto*";
+            const btn = document.getElementById('btn-checkout');
+            const originalText = btn?.innerHTML;
+            if(btn) { btn.disabled = true; btn.innerHTML = '<div class="loading-spinner mr-2"></div> Redirigiendo a WhatsApp...'; }
+            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, '_blank');
+            setTimeout(() => { cart = []; saveCart(); updateCartCounter(); renderCartView(); if(btn) { btn.disabled = false; btn.innerHTML = originalText; } navigate('home'); showToast('Pedido enviado por WhatsApp. Te contactaremos pronto.', 'success'); }, 1500);
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('theme-icon');
+            if (html.getAttribute('data-theme') === 'dark') { html.setAttribute('data-theme', 'light'); icon.classList.replace('fa-sun', 'fa-moon'); } 
+            else { html.setAttribute('data-theme', 'dark'); icon.classList.replace('fa-moon', 'fa-sun'); }
+        }
+
+        function openSearchModal() { const modal = document.getElementById('search-modal'); if(modal) modal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
+        function closeSearchModal() { const modal = document.getElementById('search-modal'); if(modal) modal.classList.add('hidden'); document.body.style.overflow = ''; }
+
+        // Chat
+        let chatOpen = false;
+        let isTyping = false;
+        
+        function toggleChat() {
+            const widget = document.getElementById('chat-widget');
+            chatOpen = !chatOpen;
+            if(widget) chatOpen ? widget.classList.remove('chat-hidden') : widget.classList.add('chat-hidden');
+        }
+        
+        function handleChatKeyPress(e) { if(e.key === 'Enter') sendChatMessage(); }
+        
+        function addTypingIndicator() {
+            const container = document.getElementById('chat-messages');
+            if(!container) return;
+            const typingDiv = document.createElement('div');
+            typingDiv.id = 'typing-indicator';
+            typingDiv.className = 'flex items-start';
+            typingDiv.innerHTML = `<div class="chat-bubble-ai p-2"><div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>`;
+            container.appendChild(typingDiv);
+            container.scrollTop = container.scrollHeight;
+            isTyping = true;
+        }
+        
+        function removeTypingIndicator() {
+            const indicator = document.getElementById('typing-indicator');
+            if(indicator) indicator.remove();
+            isTyping = false;
+        }
+        
+        function appendMessage(sender, text) {
+            const container = document.getElementById('chat-messages');
+            if(!container) return;
+            const bubble = sender === 'user' ? 'chat-bubble-user' : 'chat-bubble-ai';
+            const div = document.createElement('div');
+            div.className = `flex ${sender === 'user' ? 'justify-end' : 'justify-start'} fade-in`;
+            div.innerHTML = `<div class="${bubble} p-3 max-w-[85%]">${text}</div>`;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
+        
+        function getChatResponse(userMessage) {
+            const msg = userMessage.toLowerCase().trim();
+            if (msg.match(/^(hola|buenos dias|buenas tardes|buenas noches|hey|holi)/i)) {
+                return "¡Hola! 🏍️ Soy MotosBot. ¿Qué producto estás buscando? Puedo ayudarte con cascos, intercomunicadores, cajas, accesorios, repuestos, defensas, chalecos, guantes, botas, iluminación y herramientas.";
+            }
+            const brands = [...new Set(ALL_PRODUCTS.map(p => p.brand))];
+            const brandMatch = brands.find(b => msg.includes(b.toLowerCase()));
+            if (brandMatch) {
+                const productsByBrand = ALL_PRODUCTS.filter(p => p.brand === brandMatch);
+                if (productsByBrand.length > 0) {
+                    const productList = productsByBrand.map(p => `• ${p.name} - $${p.price.toLocaleString('es-CO')} (${p.category})`).join('\n');
+                    return `🛍️ Encontramos ${productsByBrand.length} producto(s) de la marca ${brandMatch}:\n${productList}\n\n¿Te interesa alguno en particular? Puedes hacer clic en "Ver" para más detalles.`;
+                }
+            }
+            const categoriesDict = { 'casco': 'Casco', 'cascos': 'Casco', 'intercom': 'Intercom', 'caja': 'Caja', 'cajas': 'Caja', 'accesorio': 'Accesorio', 'accesorios': 'Accesorio', 'repuesto': 'Repuesto', 'repuestos': 'Repuesto', 'defensa': 'Defensa', 'defensas': 'Defensa', 'chaleco': 'Chaleco', 'chalecos': 'Chaleco', 'guante': 'Guantes', 'guantes': 'Guantes', 'bota': 'Botas', 'botas': 'Botas', 'iluminacion': 'Iluminacion', 'led': 'Iluminacion', 'herramienta': 'Herramientas', 'herramientas': 'Herramientas' };
+            for (const [key, category] of Object.entries(categoriesDict)) {
+                if (msg.includes(key)) {
+                    const productsByCat = ALL_PRODUCTS.filter(p => p.category === category);
+                    if (productsByCat.length > 0) {
+                        const priceRange = { min: Math.min(...productsByCat.map(p => p.price)), max: Math.max(...productsByCat.map(p => p.price)) };
+                        return `📦 Tenemos ${productsByCat.length} ${key} disponibles desde $${priceRange.min.toLocaleString('es-CO')} hasta $${priceRange.max.toLocaleString('es-CO')}.\n\nMarcas: ${[...new Set(productsByCat.map(p => p.brand))].join(', ')}.\n\n¿Te gustaría ver algún producto en particular?`;
+                    }
+                }
+            }
+            if (msg.includes('oferta') || msg.includes('descuento')) {
+                const offers = ALL_PRODUCTS.filter(p => p.isOffer === true);
+                if (offers.length > 0) {
+                    return `🔥 OFERTAS FLASH 🔥\n\n${offers.map(p => `• ${p.name} - $${p.price.toLocaleString('es-CO')} (${p.category})`).join('\n')}\n\n¡Aprovecha estos precios! Puedes ver los detalles de cada producto.`;
+                }
+                return "Actualmente no tenemos productos en oferta.";
+            }
+            return `No entendí tu pregunta. 😅\n\nEjemplos:\n• "Cascos Shark"\n• "Productos en oferta"\n• "Defensas para moto"\n• "Guantes Nolana"\n\nTambién puedes usar el botón "Comparar" para comparar hasta 4 productos.`;
+        }
+        
+        async function sendChatMessage() {
+            const input = document.getElementById('chat-input');
+            const text = input?.value.trim();
+            if(!text) return;
+            appendMessage('user', text);
+            if(input) input.value = '';
+            addTypingIndicator();
+            setTimeout(() => {
+                const response = getChatResponse(text);
+                removeTypingIndicator();
+                appendMessage('ai', response);
+            }, 800);
+        }
+
+        function setupEventListeners() {
+            document.addEventListener('keydown', (e) => { if(e.key === 'Escape') { closeSearchModal(); closeBrandsDropdown(); closeComparatorModal(); closeProductDetailModal(); } });
+            const searchInput = document.getElementById('search-input');
+            if(searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    const query = e.target.value.toLowerCase();
+                    const results = ALL_PRODUCTS.filter(p => p.name.toLowerCase().includes(query) || p.brand.toLowerCase().includes(query) || p.category.toLowerCase().includes(query));
+                    const resultsDiv = document.getElementById('search-results');
+                    if(resultsDiv) {
+                        if(results.length) resultsDiv.innerHTML = results.map(p => `<div class="p-3 hover:bg-motos-border/50 rounded cursor-pointer border-b border-motos-border/30" onclick="selectSearchResult(${p.id})"><div class="font-bold">${p.brand} - ${p.name}</div><div class="text-motos-accent text-sm">$${p.price.toLocaleString('es-CO')}</div></div>`).join('');
+                        else resultsDiv.innerHTML = '<div class="p-3 text-motos-muted text-center">No hay resultados</div>';
+                    }
+                });
+            }
+        }
+        
+        function selectSearchResult(id) {
+            closeSearchModal();
+            openProductDetail(id);
+        }
+
+        init();
+    </script>
+    <script>
+        new Swiper('.swiper-hero', { loop: true, autoplay: { delay: 5000 }, pagination: { el: '.swiper-pagination', clickable: true }, navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' }, effect: 'fade' });
+    </script>
+</body>
+</html>
